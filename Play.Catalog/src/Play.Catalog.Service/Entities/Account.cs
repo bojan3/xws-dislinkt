@@ -25,5 +25,7 @@ namespace Play.Catalog.Service.Entities
         public Gender Gender { get; set; }
 
         public String Biography { get; set; }
+
+        public Boolean isPublic { get; set; }
     }
 }
