@@ -1,0 +1,12 @@
+E:\projects\Play.Common\src\Play.Common\bin\Debug\net5.0\Play.Common.deps.json
+E:\projects\Play.Common\src\Play.Common\bin\Debug\net5.0\Play.Common.dll
+E:\projects\Play.Common\src\Play.Common\bin\Debug\net5.0\ref\Play.Common.dll
+E:\projects\Play.Common\src\Play.Common\bin\Debug\net5.0\Play.Common.pdb
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.csproj.AssemblyReference.cache
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.AssemblyInfoInputs.cache
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.AssemblyInfo.cs
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.csproj.CoreCompileInputs.cache
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.dll
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\ref\Play.Common.dll
+E:\projects\Play.Common\src\Play.Common\obj\Debug\net5.0\Play.Common.pdb
