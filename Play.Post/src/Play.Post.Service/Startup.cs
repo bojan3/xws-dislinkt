@@ -11,11 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Play.Common.MongoDB;
+using Play.Common.Settings;
 
 namespace Play.Post.Service
 {
     public class Startup
     {
+        private ServiceSettings serviceSettings;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +30,16 @@ namespace Play.Post.Service
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
+            services.AddMongo()
+                    .AddMongoRepository<Play.Post.Service.Entities.Post>("posts");
+
+            services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Post.Service", Version = "v1" });
