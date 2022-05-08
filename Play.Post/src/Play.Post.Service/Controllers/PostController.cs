@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Play.Common;
 using Play.Post.Service.Clients;
 using Play.Post.Service.Dtos;
+using Play.Post.Service.Entities;
 
 namespace Play.Post.Service.Controllers
 {
@@ -85,6 +86,24 @@ namespace Play.Post.Service.Controllers
 
             // this return route of item when it's stored
             return CreatedAtAction(nameof(GetByIdAsync), new { id = post.Id }, post);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> postCommentAsync(Guid id, CommentDto commentDto)
+        {
+            var post = await postsRepository.GetAsync(id);
+
+            var comment = new Comment
+            {
+                AccountId = commentDto.AccountId,
+                Text = commentDto.Text,
+            };
+
+            post.Comments.Add(comment);
+
+            await postsRepository.UpdateAsync(post);
+
+            return NoContent();
         }
     }
 }

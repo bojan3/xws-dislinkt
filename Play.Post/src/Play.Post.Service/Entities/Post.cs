@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Play.Common;
 
 namespace Play.Post.Service.Entities
@@ -20,5 +21,7 @@ namespace Play.Post.Service.Entities
         public int DislikeCount { get; set; }
 
         public DateTimeOffset CreatedDate { get; set; }
+
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
