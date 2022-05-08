@@ -9,7 +9,7 @@ using Play.Common;
 
 namespace Play.Catalog.Service.Controller
 {
-    using System.Collections.Generic; 
+    using System.Collections.Generic;
     [ApiController]
     // https://localhost:5002/items
     [Route("account")]
@@ -58,23 +58,31 @@ namespace Play.Catalog.Service.Controller
             return account;
         }
         [HttpPost("FollowMethod")]
-        public async Task<ActionResult<Account>> FollowMethod (Guid followerID , Guid followedID)
+        public async Task<ActionResult<Account>> FollowMethod(Guid followerID, Guid followedID)
         {
-            
+
             var followerAccount = await accountsRepository.GetAsync(followerID);
-            
+
             var followedAccount = await accountsRepository.GetAsync(followedID);
 
-            if(followerAccount.FollowedAccounts != null /*&& followerAccount.FollowedAccounts.Any()*/)
+            if (followerID == followedID)
             {
-                foreach(var linkedAccount in followedAccount.FollowedAccounts) {
-                    if(linkedAccount.FollowedID == followedAccount.Id ) {
-                       return BadRequest();
-                    } 
+                return BadRequest();
+            }
+
+            if (followerAccount.FollowedAccounts != null /*&& followerAccount.FollowedAccounts.Any()*/)
+            {
+                foreach (var linkedAccount in followerAccount.FollowedAccounts)
+                {
+                    if (linkedAccount.FollowedID == followedAccount.Id)
+                    {
+                        return BadRequest();
+                    }
                 }
             }
 
-            var LinkAccount = new db_Account2Account {
+            var LinkAccount = new db_Account2Account
+            {
                 ID = Guid.NewGuid(),
                 FollowerID = followerID,
                 FollowedID = followedID,
@@ -85,8 +93,40 @@ namespace Play.Catalog.Service.Controller
             followedAccount.FollowersAccounts.Add(LinkAccount);
             await accountsRepository.UpdateAsync(followedAccount);
             await accountsRepository.UpdateAsync(followerAccount);
-            
-        return NoContent();
+
+            return NoContent();
+
+        }
+
+        [HttpPut("Approve")]
+        public async Task<IActionResult> ApproveFollow(db_Account2Account follow)
+        {
+            var followerAccount = await accountsRepository.GetAsync(follow.FollowerID);
+            var followedAccount = await accountsRepository.GetAsync(follow.FollowedID);
+
+            follow.IsApproved = true;
+
+            //Potvrdjuje kod pratioca
+            foreach (var linkedAccount in followerAccount.FollowedAccounts)
+            {
+                if (linkedAccount.FollowedID == followedAccount.Id)
+                {
+                    linkedAccount.IsApproved = true;
+                }
+            }
+            //Potvrdjuje kod pracenog profila
+            foreach (var linkedAccount in followedAccount.FollowersAccounts)
+            {
+                if (linkedAccount.FollowerID == followerAccount.Id)
+                {
+                    linkedAccount.IsApproved = true;
+                }
+
+            }
+            await accountsRepository.UpdateAsync(followedAccount);
+            await accountsRepository.UpdateAsync(followerAccount);
+
+            return NoContent();
 
         }
 
