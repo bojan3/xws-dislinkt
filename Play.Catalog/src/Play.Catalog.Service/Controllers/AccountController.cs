@@ -9,6 +9,7 @@ using Play.Common;
 
 namespace Play.Catalog.Service.Controller
 {
+    using System.Collections.Generic; 
     [ApiController]
     // https://localhost:5002/items
     [Route("account")]
@@ -29,7 +30,7 @@ namespace Play.Catalog.Service.Controller
             this.accountsRepository = accountsRepository;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllAccounts")]
         public async Task<IEnumerable<AccountDto>> GetPublicAsync()
         {
 
@@ -56,9 +57,41 @@ namespace Play.Catalog.Service.Controller
 
             return account;
         }
+        [HttpPost("FollowMethod")]
+        public async Task<ActionResult<Account>> FollowMethod (Guid followerID , Guid followedID)
+        {
+            
+            var followerAccount = await accountsRepository.GetAsync(followerID);
+            
+            var followedAccount = await accountsRepository.GetAsync(followedID);
+
+            if(followerAccount.FollowedAccounts != null /*&& followerAccount.FollowedAccounts.Any()*/)
+            {
+                foreach(var linkedAccount in followedAccount.FollowedAccounts) {
+                    if(linkedAccount.FollowedID == followedAccount.Id ) {
+                       return BadRequest();
+                    } 
+                }
+            }
+
+            var LinkAccount = new db_Account2Account {
+                ID = Guid.NewGuid(),
+                FollowerID = followerID,
+                FollowedID = followedID,
+                IsApproved = followedAccount.IsPublic
+            };
+
+            followerAccount.FollowedAccounts.Add(LinkAccount);
+            followedAccount.FollowersAccounts.Add(LinkAccount);
+            await accountsRepository.UpdateAsync(followedAccount);
+            await accountsRepository.UpdateAsync(followerAccount);
+            
+        return NoContent();
+
+        }
 
         // actionResults is for returning some sort of type
-        [HttpPost]
+        [HttpPost("CreateAccount")]
         public async Task<ActionResult<AccountDto>> PostAsync(CreateAccountDto createAccountDto)
         {
             var accounts = (await accountsRepository.GetAllAsync());
@@ -79,7 +112,9 @@ namespace Play.Catalog.Service.Controller
                 PhoneNumber = createAccountDto.PhoneNumber,
                 Gender = createAccountDto.Gender,
                 Biography = createAccountDto.Biography,
-                IsPublic = createAccountDto.IsPublic
+                IsPublic = createAccountDto.IsPublic,
+                Job = createAccountDto.Job,
+                Education = createAccountDto.Education,
             };
 
             await accountsRepository.CreateAsync(account);
@@ -88,7 +123,7 @@ namespace Play.Catalog.Service.Controller
             return CreatedAtAction(nameof(GetByIdAsync), new { id = account.Id }, account);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateAccount/{id}")]
         public async Task<IActionResult> PutAsync(Guid id, UpdatedAccountDto updateAccountDto)
         {
             var existingAccount = await accountsRepository.GetAsync(id);
@@ -114,6 +149,8 @@ namespace Play.Catalog.Service.Controller
             existingAccount.Email = updateAccountDto.Email;
             existingAccount.PhoneNumber = updateAccountDto.PhoneNumber;
             existingAccount.Biography = updateAccountDto.Biography;
+            existingAccount.Job = updateAccountDto.Job;
+            existingAccount.Education = updateAccountDto.Education;
             existingAccount.IsPublic = updateAccountDto.IsPublic;
 
             await accountsRepository.UpdateAsync(existingAccount);
