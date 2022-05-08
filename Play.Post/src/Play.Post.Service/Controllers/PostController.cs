@@ -21,7 +21,6 @@ namespace Play.Post.Service.Controllers
 
         public async Task<IEnumerable<PostDto>> GetAsync()
         {
-
             var posts = (await postsRepository.GetAllAsync()).Select(account => account.AsDto());
             return posts;
         }

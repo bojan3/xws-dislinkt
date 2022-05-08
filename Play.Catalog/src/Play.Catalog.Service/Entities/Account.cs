@@ -26,6 +26,6 @@ namespace Play.Catalog.Service.Entities
 
         public String Biography { get; set; }
 
-        public Boolean isPublic { get; set; }
+        public bool IsPublic { get; set; }
     }
 }

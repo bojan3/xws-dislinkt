@@ -30,10 +30,13 @@ namespace Play.Catalog.Service.Controller
         }
 
         [HttpGet]
-        public async Task<IEnumerable<AccountDto>> GetAsync()
+        public async Task<IEnumerable<AccountDto>> GetPublicAsync()
         {
 
-            var accounts = (await accountsRepository.GetAllAsync()).Select(account => account.AsDto());
+            var accounts = (await accountsRepository.GetAllAsync())
+            //.Where(account => account.IsPublic)
+            .Select(account => account.AsDto());
+
             return accounts;
         }
         // GET /items/123
@@ -58,6 +61,16 @@ namespace Play.Catalog.Service.Controller
         [HttpPost]
         public async Task<ActionResult<AccountDto>> PostAsync(CreateAccountDto createAccountDto)
         {
+            var accounts = (await accountsRepository.GetAllAsync());
+
+            foreach (var acc in accounts)
+            {
+
+                if (acc.Username == createAccountDto.Username)
+                {
+                    return BadRequest(ModelState);
+                }
+            }
             var account = new Account
             {
                 Username = createAccountDto.Username,
@@ -65,7 +78,8 @@ namespace Play.Catalog.Service.Controller
                 Password = createAccountDto.Password,
                 PhoneNumber = createAccountDto.PhoneNumber,
                 Gender = createAccountDto.Gender,
-                Biography = createAccountDto.Biography
+                Biography = createAccountDto.Biography,
+                IsPublic = createAccountDto.IsPublic
             };
 
             await accountsRepository.CreateAsync(account);
@@ -79,6 +93,17 @@ namespace Play.Catalog.Service.Controller
         {
             var existingAccount = await accountsRepository.GetAsync(id);
 
+            var accounts = (await accountsRepository.GetAllAsync()).Where(account => account.Id != id);
+
+            foreach (var acc in accounts)
+            {
+
+                if (acc.Username == updateAccountDto.Username)
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+
             if (existingAccount == null)
             {
                 return NotFound();
@@ -87,6 +112,9 @@ namespace Play.Catalog.Service.Controller
             existingAccount.Username = updateAccountDto.Username;
             existingAccount.Password = updateAccountDto.Password;
             existingAccount.Email = updateAccountDto.Email;
+            existingAccount.PhoneNumber = updateAccountDto.PhoneNumber;
+            existingAccount.Biography = updateAccountDto.Biography;
+            existingAccount.IsPublic = updateAccountDto.IsPublic;
 
             await accountsRepository.UpdateAsync(existingAccount);
 
@@ -102,6 +130,23 @@ namespace Play.Catalog.Service.Controller
             // items[index] = updatedItem;
 
             return NoContent();
+        }
+
+        [HttpGet("{Username}, {Password}")]
+        public async Task<ActionResult<AccountDto>> Login(string Username, string Password)
+        {
+            var accounts = (await accountsRepository.GetAllAsync());
+
+            foreach (var account in accounts)
+            {
+
+                if (account.Username == Username && account.Password == Password)
+                {
+                    return account.AsDto();
+                }
+            }
+
+            return NotFound();
         }
 
         [HttpDelete("{id}")]

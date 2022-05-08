@@ -12,7 +12,7 @@ namespace Play.Catalog.Service
 
         public static AccountDto AsDto(this Account account)
         {
-            return new AccountDto(account.Id, account.Username, account.Username, account.Email, account.PhoneNumber, account.Gender, account.Biography);
+            return new AccountDto(account.Id, account.Username, account.Password, account.Email, account.PhoneNumber, account.Gender, account.Biography, account.IsPublic);
         }
     }
 }
