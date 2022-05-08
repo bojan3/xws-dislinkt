@@ -17,7 +17,7 @@ namespace Play.Post.Service.Clients
 
         public async Task<ActionResult<bool>> GetIsPublic(Guid id)
         {
-            return await httpClient.GetFromJsonAsync<ActionResult<bool>>($"account/isPublic/{id}");
+            return await httpClient.GetFromJsonAsync<bool>($"account/isPublic/{id}");
         }
     }
 }

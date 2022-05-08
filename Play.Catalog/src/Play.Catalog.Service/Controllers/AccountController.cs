@@ -209,7 +209,7 @@ namespace Play.Catalog.Service.Controller
             return NoContent();
         }
 
-        [HttpGet("account/isPublic/{id}")]
+        [HttpGet("isPublic/{id}")]
         public async Task<ActionResult<bool>> IsPublicAsync(Guid id)
         {
             var account = (await accountsRepository.GetAsync(id)).AsDto();
@@ -219,10 +219,7 @@ namespace Play.Catalog.Service.Controller
                 return NotFound();
             }
 
-            if (account.IsPublic)
-                return true;
-            else
-                return false;
+            return account.IsPublic;
 
         }
 

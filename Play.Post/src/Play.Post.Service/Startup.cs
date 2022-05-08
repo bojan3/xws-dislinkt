@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Play.Common.MongoDB;
 using Play.Common.Settings;
+using Play.Post.Service.Clients;
 
 namespace Play.Post.Service
 {
@@ -34,6 +35,11 @@ namespace Play.Post.Service
 
             services.AddMongo()
                     .AddMongoRepository<Play.Post.Service.Entities.Post>("posts");
+
+            services.AddHttpClient<AccountClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5002");
+            });
 
             services.AddControllers(options =>
             {

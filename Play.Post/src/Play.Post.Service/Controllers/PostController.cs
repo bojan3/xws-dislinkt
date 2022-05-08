@@ -17,12 +17,10 @@ namespace Play.Post.Service.Controllers
         private readonly IRepository<Play.Post.Service.Entities.Post> postsRepository;
         private readonly AccountClient accountClinet;
 
-
-        // dodati AccountClient accountClient u kontruktor
-        public PostController(IRepository<Play.Post.Service.Entities.Post> postsRepository)
+        public PostController(IRepository<Play.Post.Service.Entities.Post> postsRepository, AccountClient accountClient)
         {
             this.postsRepository = postsRepository;
-            //this.accountClinet = accountClient;
+            this.accountClinet = accountClient;
         }
 
         [HttpGet]
@@ -46,27 +44,29 @@ namespace Play.Post.Service.Controllers
             return post;
         }
 
-        // [HttpGet("/account/{id}")]
-        // public async Task<IEnumerable<PostDto>> GetPostsByAccountIdAsync(Guid id)
-        // {
-        //     // var post = (await postsRepository.GetAsync(id)).AsDto();
+        [HttpGet("/account/{id}")]
+        public async Task<IEnumerable<PostDto>> GetPostsByAccountIdAsync(Guid id)
+        {
+            // var post = (await postsRepository.GetAsync(id)).AsDto();
 
-        //     // if (post == null)
-        //     // {
-        //     //     return NotFound();
-        //     // }
+            // if (post == null)
+            // {
+            //     return NotFound();
+            // }
 
-        //     // return post;
+            // return post;
 
-        //     var isPublic = (accountClinet.GetIsPublic(id)).Result;
+            var isPublic = (accountClinet.GetIsPublic(id)).Result;
 
-        //     if (!isPublic.Value)
-        //         return Enumerable.Empty<PostDto>();
+            if (!isPublic.Value)
+                return Enumerable.Empty<PostDto>();
 
-        //     var posts = (await postsRepository.GetAllAsync()).Where(post => post.AccountId == id).Select(post => post.AsDto());
+            var posts = (await postsRepository.GetAllAsync()).Where(post => post.AccountId == id).Select(post => post.AsDto());
 
-        //     return posts;
-        // }
+            Console.Write(posts);
+
+            return posts;
+        }
 
         [HttpPost]
         public async Task<ActionResult<PostDto>> PostAsync(CreateAccountPostDto createAccountPostDto)
