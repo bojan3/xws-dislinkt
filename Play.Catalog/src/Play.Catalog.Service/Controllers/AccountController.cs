@@ -132,6 +132,23 @@ namespace Play.Catalog.Service.Controller
             return NoContent();
         }
 
+        [HttpGet("account/isPublic/{id}")]
+        public async Task<ActionResult<bool>> IsPublicAsync(Guid id)
+        {
+            var account = (await accountsRepository.GetAsync(id)).AsDto();
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            if (account.IsPublic)
+                return true;
+            else
+                return false;
+
+        }
+
         [HttpGet("{Username}, {Password}")]
         public async Task<ActionResult<AccountDto>> Login(string Username, string Password)
         {

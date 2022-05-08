@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Play.Common;
+using Play.Post.Service.Clients;
 using Play.Post.Service.Dtos;
 
 namespace Play.Post.Service.Controllers
@@ -13,17 +14,21 @@ namespace Play.Post.Service.Controllers
     public class PostController : ControllerBase
     {
         private readonly IRepository<Play.Post.Service.Entities.Post> postsRepository;
+        private readonly AccountClient accountClinet;
 
-        public PostController(IRepository<Play.Post.Service.Entities.Post> postsRepository)
+        public PostController(IRepository<Play.Post.Service.Entities.Post> postsRepository, AccountClient accountClient)
         {
             this.postsRepository = postsRepository;
+            this.accountClinet = accountClient;
         }
 
+        [HttpGet]
         public async Task<IEnumerable<PostDto>> GetAsync()
         {
-            var posts = (await postsRepository.GetAllAsync()).Select(account => account.AsDto());
+            var posts = (await postsRepository.GetAllAsync()).Select(post => post.AsDto());
             return posts;
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PostDto>> GetByIdAsync(Guid id)
@@ -36,6 +41,28 @@ namespace Play.Post.Service.Controllers
             }
 
             return post;
+        }
+
+        [HttpGet("/account/{id}")]
+        public async Task<IEnumerable<PostDto>> GetPostsByAccountIdAsync(Guid id)
+        {
+            // var post = (await postsRepository.GetAsync(id)).AsDto();
+
+            // if (post == null)
+            // {
+            //     return NotFound();
+            // }
+
+            // return post;
+
+            var isPublic = (accountClinet.GetIsPublic(id)).Result;
+
+            if (!isPublic.Value)
+                return Enumerable.Empty<PostDto>();
+
+            var posts = (await postsRepository.GetAllAsync()).Where(post => post.AccountId == id).Select(post => post.AsDto());
+
+            return posts;
         }
 
         [HttpPost]
