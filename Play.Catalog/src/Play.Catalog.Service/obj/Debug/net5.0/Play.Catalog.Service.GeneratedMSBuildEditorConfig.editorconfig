@@ -7,4 +7,8 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Play.Catalog.Service
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\Asus\Desktop\xws-dislinkt\Play.Catalog\src\Play.Catalog.Service\
+=======
+build_property.ProjectDir = e:\projects\Play.Catalog\src\Play.Catalog.Service\
+>>>>>>> fe33002c8af027042c8eba2f8394ed2c21c9891f
