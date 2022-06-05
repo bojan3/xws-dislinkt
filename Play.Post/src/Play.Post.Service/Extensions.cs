@@ -10,6 +10,7 @@ namespace Play.Post.Service
             return new PostDto(post.Id, post.AccountId, post.Text, post.Image, post.Link, post.LikeCount, post.DislikeCount, post.CreatedDate);
         }
 
+        
         public static CommentDto AsDto(this Comment comment)
         {
             return new CommentDto(comment.AccountId, comment.Text);

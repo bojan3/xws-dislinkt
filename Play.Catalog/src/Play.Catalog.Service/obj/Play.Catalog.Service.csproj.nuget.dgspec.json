@@ -1,26 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "E:\\projects\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj": {}
+    "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj": {}
   },
   "projects": {
-    "E:\\projects\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj": {
+    "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\projects\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj",
+        "projectUniqueName": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj",
         "projectName": "Play.Catalog.Service",
-        "projectPath": "E:\\projects\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj",
-        "packagesPath": "C:\\Users\\winBrt\\.nuget\\packages\\",
-        "outputPath": "E:\\projects\\Play.Catalog\\src\\Play.Catalog.Service\\obj\\",
+        "projectPath": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.Catalog\\src\\Play.Catalog.Service\\Play.Catalog.Service.csproj",
+        "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.Catalog\\src\\Play.Catalog.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\winBrt\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "E:\\projects\\packages": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

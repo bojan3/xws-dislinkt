@@ -11,6 +11,7 @@ namespace Play.Catalog.Service.Entities
         female
     }
 
+
     public class Account : IEntity
     {
         public Guid Id { get; set; }
@@ -29,7 +30,5 @@ namespace Play.Catalog.Service.Entities
         public List<db_Account2Account> FollowersAccounts { get; set; } = new List<db_Account2Account>();
         public List<db_Account2Account> WaitingForApprove { get; set; } = new List<db_Account2Account>();
     }
-
-
 
 }
