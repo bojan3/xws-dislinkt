@@ -36,6 +36,17 @@ namespace Play.Post.Service
             services.AddMongo()
                     .AddMongoRepository<Play.Post.Service.Entities.Post>("posts");
 
+            services.AddCors(options =>
+                {
+                    options.AddPolicy("Policy1",
+                        policy =>
+                        {
+                            policy.WithOrigins("http://localhost:4200")                                .AllowAnyHeader()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                });
+
             services.AddHttpClient<AccountClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:5002");
@@ -65,6 +76,8 @@ namespace Play.Post.Service
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Play.Catalog.Service.Entities;
 using Play.Common;
+using Microsoft.AspNetCore.Cors;
 
 namespace Play.Catalog.Service.Controller
 {
@@ -28,19 +29,23 @@ namespace Play.Catalog.Service.Controller
         public AccountController(IRepository<Account> accountsRepository)
         {
             this.accountsRepository = accountsRepository;
+
         }
 
+        [EnableCors("Policy1")]
         [HttpGet("GetAllAccounts")]
         public async Task<IEnumerable<AccountDto>> GetPublicAsync()
         {
 
             var accounts = (await accountsRepository.GetAllAsync())
-            //.Where(account => account.IsPublic)
+            .Where(account => account.IsPublic)
             .Select(account => account.AsDto());
 
             return accounts;
         }
+
         // GET /items/123
+        [EnableCors("Policy1")]
         [HttpGet("{id}")]
         //public ItemDto GetById(Guid id)
         // ActionsResult is just so we can return NotFound or ItemDto
@@ -57,6 +62,7 @@ namespace Play.Catalog.Service.Controller
 
             return account;
         }
+
         [HttpPost("FollowMethod")]
         public async Task<ActionResult<Account>> FollowMethod(Guid followerID, Guid followedID)
         {
@@ -131,6 +137,7 @@ namespace Play.Catalog.Service.Controller
         }
 
         // actionResults is for returning some sort of type
+        [EnableCors("Policy1")]
         [HttpPost("CreateAccount")]
         public async Task<ActionResult<AccountDto>> PostAsync(CreateAccountDto createAccountDto)
         {
@@ -223,6 +230,7 @@ namespace Play.Catalog.Service.Controller
 
         }
 
+        [EnableCors("Policy1")]
         [HttpGet("{Username}, {Password}")]
         public async Task<ActionResult<AccountDto>> Login(string Username, string Password)
         {

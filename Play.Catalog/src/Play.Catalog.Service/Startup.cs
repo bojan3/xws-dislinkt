@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Play.Catalog.Service.Entities;
+using Play.Catalog.Service.Services;
 using Play.Common.MongoDB;
 using Play.Common.Settings;
 
@@ -35,6 +37,19 @@ namespace Play.Catalog.Service
 
             services.AddMongo()
                     .AddMongoRepository<Account>("accounts");
+            
+            services.AddCors(options =>
+                {
+                    options.AddPolicy("Policy1",
+                        policy =>
+                        {
+                            policy.WithOrigins("http://localhost:4200")                                .AllowAnyHeader()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                });
+
+            services.AddGrpc();
 
             services.AddControllers(options =>
             {
@@ -45,6 +60,7 @@ namespace Play.Catalog.Service
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +77,20 @@ namespace Play.Catalog.Service
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<IsPublicService>();
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Requires HTTP/2");
+                });
             });
+            
         }
     }
 }

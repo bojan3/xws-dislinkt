@@ -5922,19 +5922,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pc\\.nuget\\packages\\": {}
+    "C:\\Users\\Goran\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.JobOffer\\src\\Play.JobOffer.Service\\Play.JobOffer.Service.csproj",
+      "projectUniqueName": "D:\\Materijali sa fakulteta\\8 semestar\\XML i veb servisi\\Projekat\\Play.JobOffer\\src\\Play.JobOffer.Service\\Play.JobOffer.Service.csproj",
       "projectName": "Play.JobOffer.Service",
-      "projectPath": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.JobOffer\\src\\Play.JobOffer.Service\\Play.JobOffer.Service.csproj",
-      "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pc\\OneDrive\\Radna površina\\xws\\xws-dislinkt\\Play.JobOffer\\src\\Play.JobOffer.Service\\obj\\",
+      "projectPath": "D:\\Materijali sa fakulteta\\8 semestar\\XML i veb servisi\\Projekat\\Play.JobOffer\\src\\Play.JobOffer.Service\\Play.JobOffer.Service.csproj",
+      "packagesPath": "C:\\Users\\Goran\\.nuget\\packages\\",
+      "outputPath": "D:\\Materijali sa fakulteta\\8 semestar\\XML i veb servisi\\Projekat\\Play.JobOffer\\src\\Play.JobOffer.Service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Goran\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5987,7 +5987,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.407\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   },

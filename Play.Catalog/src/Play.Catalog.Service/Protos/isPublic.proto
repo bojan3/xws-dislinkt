@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Play.Catalog.Service";
+
+service IsPublic {
+	rpc isAccountPublic (AccountId) returns (Response);
+}
+
+message AccountId {
+	string id = 1;
+}
+
+message Response {
+	bool isPublic = 1; 
+}

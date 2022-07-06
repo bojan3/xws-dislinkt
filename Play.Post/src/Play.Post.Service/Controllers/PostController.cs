@@ -7,6 +7,9 @@ using Play.Common;
 using Play.Post.Service.Clients;
 using Play.Post.Service.Dtos;
 using Play.Post.Service.Entities;
+using Microsoft.AspNetCore.Cors;
+using Grpc.Net.Client;
+using Play.Catalog.Service;
 
 namespace Play.Post.Service.Controllers
 {
@@ -16,6 +19,7 @@ namespace Play.Post.Service.Controllers
     {
         private readonly IRepository<Play.Post.Service.Entities.Post> postsRepository;
         private readonly AccountClient accountClinet;
+        
 
         public PostController(IRepository<Play.Post.Service.Entities.Post> postsRepository, AccountClient accountClient)
         {
@@ -44,6 +48,7 @@ namespace Play.Post.Service.Controllers
             return post;
         }
 
+        [EnableCors("Policy1")]
         [HttpGet("/account/{id}")]
         public async Task<IEnumerable<PostDto>> GetPostsByAccountIdAsync(Guid id)
         {
@@ -56,14 +61,20 @@ namespace Play.Post.Service.Controllers
 
             // return post;
 
-            var isPublic = (accountClinet.GetIsPublic(id)).Result;
+            /*var isPublic = (accountClinet.GetIsPublic(id)).Result;
 
             if (!isPublic.Value)
-                return Enumerable.Empty<PostDto>();
+                return Enumerable.Empty<PostDto>();*/
+
+            var channel = GrpcChannel.ForAddress("https://localhost:5002");
+            var client = new IsPublic.IsPublicClient(channel);
+            var input = new AccountId { Id = id.ToString() };
+            var isPublic = await client.isAccountPublicAsync(input);
+
+            /*if (!isPublic.IsPublic)
+                return Enumerable.Empty<PostDto>();*/
 
             var posts = (await postsRepository.GetAllAsync()).Where(post => post.AccountId == id).Select(post => post.AsDto());
-
-            Console.Write(posts);
 
             return posts;
         }
