@@ -12,20 +12,24 @@ namespace Play.Catalog.Service.Services
     {
         private readonly ILogger<IsPublicService> _logger;
         private readonly IRepository<Account> accountsRepository;
+
         public IsPublicService(ILogger<IsPublicService> logger, IRepository<Account> accountsRepository)
         {
             _logger = logger;
             this.accountsRepository = accountsRepository;
         }
-        public override Task<Response> isAccountPublic(AccountId id, ServerCallContext context)
+        public override async Task<Response> isAccountPublic(AccountId id, ServerCallContext context)
         {
-            //var account = (await accountsRepository.GetAsync(new Guid())).AsDto();
-            //var account = accountsRepository.GetAsync(new Guid(id.Id)).AsDto();
-
-            //return new Response { IsPublic = account.IsPublic };
-            return Task.FromResult(new Response { IsPublic = false });
+            var account = (await accountsRepository.GetAsync(new Guid(id.Id))).AsDto();
+            return new Response { IsPublic = account.IsPublic };
         }
 
+        /*public override async Task isAccountPublic(AccountId request, IServerStreamWriter<Response> responseStream, ServerCallContext context)
+        {
+            var account = (await accountsRepository.GetAsync(new Guid())).AsDto();
+            //return new Response { IsPublic = false };
+            await responseStream.WriteAsync(new Response {IsPublic = account.IsPublic});
+        }*/
 
     }
 }

@@ -69,10 +69,11 @@ namespace Play.Post.Service.Controllers
             var channel = GrpcChannel.ForAddress("https://localhost:5002");
             var client = new IsPublic.IsPublicClient(channel);
             var input = new AccountId { Id = id.ToString() };
-            var isPublic = await client.isAccountPublicAsync(input);
-
-            /*if (!isPublic.IsPublic)
-                return Enumerable.Empty<PostDto>();*/
+            var isPublic = client.isAccountPublic(input);
+            //var isPublic = await client.isAccountPublic(input);
+            Console.WriteLine(isPublic);
+            if (!isPublic.IsPublic)
+                return Enumerable.Empty<PostDto>();
 
             var posts = (await postsRepository.GetAllAsync()).Where(post => post.AccountId == id).Select(post => post.AsDto());
 
