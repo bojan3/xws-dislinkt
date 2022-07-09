@@ -1,0 +1,2 @@
+obj\Release\net5.0\Protos/IsPublic.cs \
+obj\Release\net5.0\Protos/IsPublicGrpc.cs: Protos/isPublic.proto

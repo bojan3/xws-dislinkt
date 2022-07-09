@@ -7,29 +7,28 @@ using System.Threading.Tasks;
 using Play.Catalog.Service.Entities;
 using Play.Common;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Play.Catalog.Service.Models;
 
 namespace Play.Catalog.Service.Controller
 {
-    using System.Collections.Generic;
+
     [ApiController]
     // https://localhost:5002/items
     [Route("account")]
     public class AccountController : ControllerBase
     {
-        // readonly it's for editing only while constructing item
-        // private static readonly List<ItemDto> items = new()
-        // {
-        //     new ItemDto(Guid.NewGuid(), "Potion", "Restores small amount of HP", 5, System.DateTimeOffset.UtcNow),
-        //     new ItemDto(Guid.NewGuid(), "Antidote", "CuresPotion", 7, System.DateTimeOffset.UtcNow),
-        //     new ItemDto(Guid.NewGuid(), "Bronze sword", "Deals a small amount of damage", 20, System.DateTimeOffset.UtcNow),
-        // };
-
         private readonly IRepository<Account> accountsRepository;
+        private readonly IRepository<AuthenticateResponse> responseRepository;
 
-        public AccountController(IRepository<Account> accountsRepository)
+        public AccountController(IRepository<Account> accountsRepository, IRepository<AuthenticateResponse> responseRepository)
         {
             this.accountsRepository = accountsRepository;
-
+            this.responseRepository = responseRepository;
         }
 
         [EnableCors("Policy1")]
@@ -44,15 +43,10 @@ namespace Play.Catalog.Service.Controller
             return accounts;
         }
 
-        // GET /items/123
         [EnableCors("Policy1")]
         [HttpGet("{id}")]
-        //public ItemDto GetById(Guid id)
-        // ActionsResult is just so we can return NotFound or ItemDto
         public async Task<ActionResult<AccountDto>> GetByIdAsync(Guid id)
         {
-            // signleOrDefault = return item of null
-
             var account = (await accountsRepository.GetAsync(id)).AsDto();
 
             if (account == null)
@@ -136,7 +130,6 @@ namespace Play.Catalog.Service.Controller
 
         }
 
-        // actionResults is for returning some sort of type
         [EnableCors("Policy1")]
         [HttpPost("CreateAccount")]
         public async Task<ActionResult<AccountDto>> PostAsync(CreateAccountDto createAccountDto)
@@ -202,17 +195,6 @@ namespace Play.Catalog.Service.Controller
 
             await accountsRepository.UpdateAsync(existingAccount);
 
-            // // with create copy with what you had and what you changed
-            // var updatedItem = existingItem with
-            // {
-            //     Name = updateItemDto.Name,
-            //     Description = updateItemDto.Description,
-            //     Price = updateItemDto.Price
-            // };
-
-            // var index = items.FindIndex(existingItem => existingItem.Id == id);
-            // items[index] = updatedItem;
-
             return NoContent();
         }
 
@@ -231,21 +213,59 @@ namespace Play.Catalog.Service.Controller
         }
 
         [EnableCors("Policy1")]
-        [HttpGet("{Username}, {Password}")]
-        public async Task<ActionResult<AccountDto>> Login(string Username, string Password)
+        [HttpGet("login")]
+        public async Task<ActionResult<bool>> Login(AuthenticateRequest request)
         {
             var accounts = (await accountsRepository.GetAllAsync());
 
             foreach (var account in accounts)
             {
 
-                if (account.Username == Username && account.Password == Password)
+                if (account.Username == request.Username && account.Password == request.Password)
                 {
-                    return account.AsDto();
+                    var token = generateJwtToken(account.AsDto());
+                    AuthenticateResponse autRes = new AuthenticateResponse(account.AsDto(), token);
+                    await PostResponseAsync(autRes);
+                    return true;
                 }
             }
 
             return NotFound();
+        }
+
+        [HttpPost("CreateToken")]
+        public async Task<ActionResult<AuthenticateResponse>> PostResponseAsync(AuthenticateResponse response)
+        {
+            await responseRepository.CreateAsync(response);
+
+            return response;
+        }
+
+        public async Task<ActionResult<bool>> Authorization(Guid id, String token){
+            var tokens = (await responseRepository.GetAllAsync());
+
+            foreach(var t in tokens){
+                if(id == t.Id && token == t.Token){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private string generateJwtToken(AccountDto user)
+        {
+            // generate token that is valid for 7 days
+            var tokenHandler = new JwtSecurityTokenHandler();
+            string Secret = "XCAP05H6LoKvbRRa/QkqLNMI7cOHguaRyHzyg7n5qEkGjQmtBhz4SzYh4Fqwjyi3KJHlSXKPwVu2+bXr6CtpgQ==";
+            var key = Encoding.ASCII.GetBytes(Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         [HttpDelete("{id}")]

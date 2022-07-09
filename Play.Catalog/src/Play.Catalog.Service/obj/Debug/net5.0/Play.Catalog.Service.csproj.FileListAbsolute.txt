@@ -312,3 +312,8 @@ D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\sr
 D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Grpc.AspNetCore.Server.dll
 D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Grpc.AspNetCore.Server.ClientFactory.dll
 D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Grpc.Net.ClientFactory.dll
+D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Materijali sa fakulteta\8 semestar\XML i veb servisi\Projekat\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
