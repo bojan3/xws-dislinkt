@@ -18,7 +18,7 @@ namespace Play.Catalog.Service.Controller
 {
 
     [ApiController]
-    // https://localhost:5002/items
+    // https://localhost:5002/
     [Route("account")]
     public class AccountController : ControllerBase
     {
@@ -213,9 +213,10 @@ namespace Play.Catalog.Service.Controller
         }
 
         [EnableCors("Policy1")]
-        [HttpGet("login")]
-        public async Task<ActionResult<bool>> Login(AuthenticateRequest request)
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(AuthenticateRequest request)
         {
+            Console.WriteLine(request);
             var accounts = (await accountsRepository.GetAllAsync());
 
             foreach (var account in accounts)
@@ -226,7 +227,7 @@ namespace Play.Catalog.Service.Controller
                     var token = generateJwtToken(account.AsDto());
                     AuthenticateResponse autRes = new AuthenticateResponse(account.AsDto(), token);
                     await PostResponseAsync(autRes);
-                    return true;
+                    return token;
                 }
             }
 

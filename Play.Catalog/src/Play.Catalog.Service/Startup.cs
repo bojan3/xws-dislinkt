@@ -36,14 +36,15 @@ namespace Play.Catalog.Service
             serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
             services.AddMongo()
-                    .AddMongoRepository<Account>("accounts");
+                    .AddMongoRepository<Account>("accounts")
+                    .AddMongoRepository<AuthenticateResponse>("Response");
             
             services.AddCors(options =>
                 {
                     options.AddPolicy("Policy1",
                         policy =>
                         {
-                            policy.WithOrigins("http://localhost:4200")                                .AllowAnyHeader()
+                            policy.WithOrigins("http://localhost:4200")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });
