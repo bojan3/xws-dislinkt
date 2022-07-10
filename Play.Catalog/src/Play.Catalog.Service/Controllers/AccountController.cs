@@ -35,7 +35,7 @@ namespace Play.Catalog.Service.Controller
         [HttpGet("GetAllAccounts")]
         public async Task<IEnumerable<AccountDto>> GetPublicAsync()
         {
-
+            //await this.Authorization();
             var accounts = (await accountsRepository.GetAllAsync())
             .Where(account => account.IsPublic)
             .Select(account => account.AsDto());
@@ -214,9 +214,8 @@ namespace Play.Catalog.Service.Controller
 
         [EnableCors("Policy1")]
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(AuthenticateRequest request)
+        public async Task<ActionResult<UserIdToken>> Login(AuthenticateRequest request)
         {
-            Console.WriteLine(request);
             var accounts = (await accountsRepository.GetAllAsync());
 
             foreach (var account in accounts)
@@ -227,7 +226,7 @@ namespace Play.Catalog.Service.Controller
                     var token = generateJwtToken(account.AsDto());
                     AuthenticateResponse autRes = new AuthenticateResponse(account.AsDto(), token);
                     await PostResponseAsync(autRes);
-                    return token;
+                    return new UserIdToken(account.Id, token);
                 }
             }
 
@@ -242,15 +241,34 @@ namespace Play.Catalog.Service.Controller
             return response;
         }
 
-        public async Task<ActionResult<bool>> Authorization(Guid id, String token){
+        public async Task<ActionResult<bool>> Authorization()
+        {
+            var headers = Request.Headers;
+            var token = this.getTokenFromHeader(headers);
+
             var tokens = (await responseRepository.GetAllAsync());
 
-            foreach(var t in tokens){
-                if(id == t.Id && token == t.Token){
+            foreach (var t in tokens)
+            {
+                if (token == t.Token)
+                {
                     return true;
                 }
             }
             return false;
+        }
+
+        private string getTokenFromHeader(Microsoft.AspNetCore.Http.IHeaderDictionary headers)
+        {
+            string token = "";
+            foreach (var header in headers)
+            {
+                if (header.Key.Equals("Authorization"))
+                {
+                    token = header.Value;
+                }
+            }
+            return token;
         }
 
         private string generateJwtToken(AccountDto user)
@@ -272,7 +290,6 @@ namespace Play.Catalog.Service.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            //var index = items.FindIndex(existingItem => existingItem.Id == id);
 
             var existingAccount = await accountsRepository.GetAsync(id);
 
@@ -283,14 +300,30 @@ namespace Play.Catalog.Service.Controller
 
             await accountsRepository.RemoveAsync(id);
 
-            // if (index < 0)
-            // {
-            //     return NotFound();
-            // }
-
-            // items.RemoveAt(index);
-
             return NoContent();
+        }
+
+        [EnableCors("Policy1")]
+        [HttpDelete("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            Guid id;
+            var headers = Request.Headers;
+            var tokens = (await responseRepository.GetAllAsync());
+            var token = this.getTokenFromHeader(headers);
+            Console.WriteLine(tokens.Count);
+            foreach (var t in tokens)
+            {
+                Console.WriteLine(tokens.Count);
+                if (token == t.Token)
+                {
+                    id = t.Id;
+                    Console.WriteLine(id);
+                    await this.responseRepository.RemoveAsync(id);
+                    return Ok();
+                }
+            }
+            return NotFound();
         }
     }
 
